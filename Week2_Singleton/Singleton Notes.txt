@@ -1,0 +1,16 @@
+From Tutorial:
+https://www.bing.com/videos/search?q=singletons+in+unity+in+depth&&view=detail&mid=24BCEE4F7D0F801BEA5E24BCEE4F7D0F801BEA5E&&FORM=VRDGAR&ru=%2Fvideos%2Fsearch%3Fq%3Dsingletons%2Bin%2Bunity%2Bin%2Bdepth%26FORM%3DHDRSC3
+
+Notes:
+When going from one scene to another, 
+all objects from the previous scene are destroyed.
+
+To prevent it, call the function: DontDestoryOnLoad() and pass in to the gameObject
+	gameObject refer to the gameObject who hold the script
+
+Ususally the Singleton object is the Game Controller/ Game Manager(hold data for the entire game: score, current coin count, life count)
+
+Carry value from one scene to another scene throughout the entire game play(in any scene)
+
+Singleton Practice:
+Singleton can be place in any class/ object that need to be carry from one scene to another (for instance, player)
