@@ -31,6 +31,7 @@ public class GameBoard : MonoBehaviour
     }
 
     // draw the entire gameboard with cells
+    // cell is 2d array for its location on x, y axis
     public void Draw(Cell[,] state)
     {
         // get w of the grid
@@ -43,8 +44,9 @@ public class GameBoard : MonoBehaviour
         {
             for (int j = 0; j < heigt; j++)
             {
+                // set up coordinates location for the cell
                 Cell cell = state[i, j];
-                // render each cell
+                // render each cell with info in data structure set
                 tilemap.SetTile(cell.position, GetTile(cell));
             }
         }

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// data structure for each individual cell
+// data structure for each individual cell with in the board
+// each cell is a 2d array
 public struct Cell
 {
+    // type of the cell
     public enum Type
     {
         Empty,
@@ -16,6 +18,7 @@ public struct Cell
     public Vector3Int position;
     // type of each cell
     public Type type;
+    // number realted to how many bombs nearby
     public int number;
     
     // different states of the cell
