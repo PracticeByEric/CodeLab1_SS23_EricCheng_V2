@@ -29,11 +29,16 @@ public class Game : MonoBehaviour
         state = new Cell[width, height];
         GenerateCells();
         
+        // center the board by adjusting camera
+        // move camera half width and half height away, keep z as default
+        Camera.main.transform.position = new Vector3(width/2, height/2, -10f);
+        
         //update board
         _gameBoard.Draw(state);
     }
 
-    // generate cell on each cell on the gameboard
+    // Generate all elements by layers
+    // LAYER 1: Generate cell on each cell on the gameboard
     private void GenerateCells()
     {
         for (int x = 0; x < width; x++) 
