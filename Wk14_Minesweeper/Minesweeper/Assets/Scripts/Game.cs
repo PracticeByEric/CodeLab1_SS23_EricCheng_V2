@@ -172,4 +172,64 @@ public class Game : MonoBehaviour
 
         return count;
     }
+
+    // Check for mouse button click
+    private void Update()
+    {
+        // right click to trigger flag
+        if (Input.GetMouseButtonDown(1))
+        {
+            Flag();
+        }
+    }
+
+    private void Flag()
+    {
+        // get the position for mouse input
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // mouse的worldPosition定位在cell上 
+        Vector3Int cellPosition = _gameBoard.tilemap.WorldToCell(worldPosition);
+        // get the cell at the clicked mouse position
+        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+        
+        // check the validity of the cell
+        if (cell.type == Cell.Type.Invalid)
+        {
+            return;
+        }
+        
+        // if there is a pointed cell, change flag status
+        cell.flagged = !cell.flagged;
+        state[cellPosition.x, cellPosition.y] = cell;
+    }
+
+    // get the clicked cell position
+    private Cell GetCell(int x, int y)
+    {
+        // if the clicked position IS in the cell grid
+        if (IsValid(x, y))
+        {
+            return state[x, y];
+        }
+        // if the clicked position is NOT in the cell grid
+        else
+        {
+            // set the cell to be a invalid cell
+            return new Cell();
+        }
+    }
+
+    // 判断mouse click是否在cell内
+    private bool IsValid(int x, int y)
+    {
+        // if mouse click is within the boundary of cell
+        if (x > 0 && x < width && y > 0 && y < height)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

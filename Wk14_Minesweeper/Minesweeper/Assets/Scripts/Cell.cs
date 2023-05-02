@@ -9,6 +9,7 @@ public struct Cell
     // type of the cell
     public enum Type
     {
+        Invalid,
         Empty,
         Mine,
         Number,
