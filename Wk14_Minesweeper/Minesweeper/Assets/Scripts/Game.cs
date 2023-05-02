@@ -97,7 +97,7 @@ public class Game : MonoBehaviour
             // change state of the cell on selective position
             state[x, y].type = Cell.Type.Mine;
             // 测试内容，显示state
-            state[x, y].revealed = true;
+            // state[x, y].revealed = true;
         }
     }
     
@@ -126,8 +126,8 @@ public class Game : MonoBehaviour
                 
                 // state the changes
                 state[x, y] = cell;
-                // 测试内容，显示state
-                state[x, y].revealed = true;
+                // 测试，显示state
+                // state[x, y].revealed = true;
             }
         }
     }
