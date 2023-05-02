@@ -32,10 +32,12 @@ public class Game : MonoBehaviour
     {
         state = new Cell[width, height];
         
-        // generate all the cells on the base layer
+        // LAYER 0: generate all the cells on the base layer
         GenerateCells();
-        
+        // LAYER 1: add mines randomly on the cells
         GenerateMines();
+        // LAYER 2: generate number cells based on mine
+        GenerateNumbers();
         
         // camera offset: center the board by adjusting camera
         // move camera half width and half height away, keep z as default
@@ -94,7 +96,8 @@ public class Game : MonoBehaviour
 
             // change state of the cell on selective position
             state[x, y].type = Cell.Type.Mine;
-            // state[x, y].revealed = true;
+            // 测试内容，显示state
+            state[x, y].revealed = true;
         }
     }
     
@@ -116,6 +119,15 @@ public class Game : MonoBehaviour
                 }
                 // 如果不是mine，需要在cell上显示数字
                 cell.number = CountMines(x, y);
+                if (cell.number > 0)
+                {
+                    cell.type = Cell.Type.Number;
+                }
+                
+                // state the changes
+                state[x, y] = cell;
+                // 测试内容，显示state
+                state[x, y].revealed = true;
             }
         }
     }
@@ -144,7 +156,8 @@ public class Game : MonoBehaviour
                 int y = cellY + disY;
                 
                 // 排除exception即x和y在grid边缘之外
-                if (x < 0 || x > width || y < 0 || y > height)
+                // boundary不能小于0或者超过width
+                if (x < 0 || x >= width || y < 0 || y >= height)
                 {
                     // skip the cell
                     continue;
