@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -176,13 +177,21 @@ public class Game : MonoBehaviour
     // Check for mouse button click
     private void Update()
     {
-        // right click to trigger flag
+        // RIGHT CLICK: receive right mouse click
         if (Input.GetMouseButtonDown(1))
         {
+            // add flag on right click
             Flag();
+        }
+
+        // LEFT CLICK: 
+        else if (Input.GetMouseButtonDown(0))
+        {
+            
         }
     }
 
+    // FLAG cell
     private void Flag()
     {
         // get the position for mouse input
@@ -193,7 +202,7 @@ public class Game : MonoBehaviour
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
         
         // check the validity of the cell
-        if (cell.type == Cell.Type.Invalid)
+        if (cell.type == Cell.Type.Invalid || cell.revealed)
         {
             return;
         }
@@ -201,6 +210,27 @@ public class Game : MonoBehaviour
         // if there is a pointed cell, change flag status
         cell.flagged = !cell.flagged;
         state[cellPosition.x, cellPosition.y] = cell;
+    }
+    
+    // REVEAL CELL
+    private void Reveal()
+    {
+        // get the worldPosition for mouse input
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // get the cell position based on worldPosition
+        Vector3Int cellPosition = _gameBoard.tilemap.WorldToCell(worldPosition);
+        // get the cell at the cell position
+        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+
+        if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
+        {
+            return;
+        }
+        
+        // reveal cell
+        cell.revealed = true;
+        state[cellPosition.x, cellPosition.y] = cell;
+
     }
 
     // get the clicked cell position
