@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -182,20 +183,23 @@ public class Game : MonoBehaviour
     // Check for mouse button click
     private void Update()
     {
-        // RIGHT CLICK: receive right mouse click
-        if (Input.GetMouseButtonDown(1))
-        {
-            // Debug.Log("Flag");
-            // add flag on right click
-            Flag();
-        }
+        // if (gameOver == false)
+        // {
+            // RIGHT CLICK: receive right mouse click
+            if (Input.GetMouseButtonDown(1))
+            {
+                // Debug.Log("Flag");
+                // add flag on right click
+                Flag();
+            }
 
-        // LEFT CLICK: 
-        else if (Input.GetMouseButtonDown(0))
-        {
-            // Debug.Log("Reveal");
-            Reveal();
-        }
+            // LEFT CLICK: 
+            else if (Input.GetMouseButtonDown(0))
+            {
+                // Debug.Log("Reveal Triggered");
+                Reveal();
+            }   
+        // }
     }
 
     // FLAG cell
@@ -239,22 +243,25 @@ public class Game : MonoBehaviour
         if (cell.type == Cell.Type.Empty)
         {
             RevealAll(cell);
+            CheckWin();
         }
 
         // EXPLOSION reveal
         if (cell.type == Cell.Type.Mine)
         {
+            // Debug.Log("Explosion");
             Explode(cell);
         }
 
         // NORMAL reveal cell
         cell.revealed = true;
         state[cellPosition.x, cellPosition.y] = cell;
+        CheckWin();
         _gameBoard.Draw(state);
 
     }
     
-    // Explode, gameover
+    // Explode cell
     private void Explode(Cell cell)
     {
         // Debug.Log("Game Over");
@@ -266,20 +273,20 @@ public class Game : MonoBehaviour
         state[cell.position.x, cell.position.y] = cell;
 
         // if triggered explosion reveal all the mines in game
-        for (int x = 0; x < width; x++) 
-        {
-            for (int y = 0; y < height; y++)
-            {
-                // loop through each cell 
-                cell = state[x, y];
-                
-                if (cell.type == Cell.Type.Mine)
-                {
-                    cell.revealed = true;
-                    state[x, y] = cell;
-                }
-            }
-        }
+        // for (int x = 0; x < width; x++) 
+        // {
+        //     for (int y = 0; y < height; y++)
+        //     {
+        //         // loop through each cell 
+        //         cell = state[x, y];
+        //         
+        //         if (cell.type == Cell.Type.Mine)
+        //         {
+        //             cell.revealed = true;
+        //             state[x, y] = cell;
+        //         }
+        //     }
+        // }
     }
 
     // Reveal all nearby empty cell
@@ -340,7 +347,8 @@ public class Game : MonoBehaviour
     private bool IsValid(int x, int y)
     {
         // if mouse click is within the boundary of cell
-        if (x > 0 && x < width && y > 0 && y < height)
+        // cell boundary from 0 to width/ height -1
+        if (x >= 0 && x < width && y >= 0 && y < height)
         {
             return true;
         }
@@ -348,5 +356,28 @@ public class Game : MonoBehaviour
         {
             return false;
         }
+    }
+    
+    // Check whether use has won
+    // check any left unrevealed cells
+    private void CheckWin()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Cell cell = state[x, y];
+
+                // does not count Mine cell in but still unrevealed cell
+                // this means not all cells are reveals
+                if (cell.type != Cell.Type.Mine && cell.revealed == false)
+                {
+                    return;
+                }
+            }
+        }
+        // Winning mechanism
+        Debug.Log("Win!");
+        gameOver = true;
     }
 }
