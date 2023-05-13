@@ -158,13 +158,13 @@ public class Game : MonoBehaviour
                 
                 // 排除exception即x和y在grid边缘之外
                 // boundary不能小于0或者超过width
-                if (x < 0 || x >= width || y < 0 || y >= height)
-                {
-                    // skip the cell
-                    continue;
-                }
+                // if (x < 0 || x >= width || y < 0 || y >= height)
+                // {
+                //     // skip the cell
+                //     continue;
+                // }
 
-                if (state[x, y].type == Cell.Type.Mine)
+                if (GetCell(x, y).type == Cell.Type.Mine)
                 {
                     count++;
                 }
@@ -180,6 +180,7 @@ public class Game : MonoBehaviour
         // RIGHT CLICK: receive right mouse click
         if (Input.GetMouseButtonDown(1))
         {
+            // Debug.Log("Flag");
             // add flag on right click
             Flag();
         }
@@ -187,7 +188,8 @@ public class Game : MonoBehaviour
         // LEFT CLICK: 
         else if (Input.GetMouseButtonDown(0))
         {
-            
+            // Debug.Log("Reveal");
+            // Reveal();
         }
     }
 
@@ -200,16 +202,15 @@ public class Game : MonoBehaviour
         Vector3Int cellPosition = _gameBoard.tilemap.WorldToCell(worldPosition);
         // get the cell at the clicked mouse position
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
-        
+
         // check the validity of the cell
-        if (cell.type == Cell.Type.Invalid || cell.revealed)
+        if (cell.type != Cell.Type.Invalid || cell.revealed)
         {
-            return;
+            cell.flagged = !cell.flagged;
+            state[cellPosition.x, cellPosition.y] = cell;   
+            // redraw everything on
+            _gameBoard.Draw(state);
         }
-        
-        // if there is a pointed cell, change flag status
-        cell.flagged = !cell.flagged;
-        state[cellPosition.x, cellPosition.y] = cell;
     }
     
     // REVEAL CELL
@@ -230,6 +231,7 @@ public class Game : MonoBehaviour
         // reveal cell
         cell.revealed = true;
         state[cellPosition.x, cellPosition.y] = cell;
+        _gameBoard.Draw(state);
 
     }
 
