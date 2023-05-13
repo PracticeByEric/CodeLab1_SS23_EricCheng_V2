@@ -183,8 +183,9 @@ public class Game : MonoBehaviour
     // Check for mouse button click
     private void Update()
     {
-        // if (gameOver == false)
-        // {
+        // Only able to move if !gameOver
+        if (gameOver == false)
+        {
             // RIGHT CLICK: receive right mouse click
             if (Input.GetMouseButtonDown(1))
             {
@@ -199,7 +200,7 @@ public class Game : MonoBehaviour
                 // Debug.Log("Reveal Triggered");
                 Reveal();
             }   
-        // }
+        }
     }
 
     // FLAG cell
