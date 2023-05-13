@@ -189,7 +189,7 @@ public class Game : MonoBehaviour
         else if (Input.GetMouseButtonDown(0))
         {
             // Debug.Log("Reveal");
-            // Reveal();
+            Reveal();
         }
     }
 
@@ -203,7 +203,8 @@ public class Game : MonoBehaviour
         // get the cell at the clicked mouse position
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
 
-        // check the validity of the cell
+        // check the validity of the cell to be flagged
+        // cell that is Invalid or revealed can't be flag
         if (cell.type != Cell.Type.Invalid || cell.revealed)
         {
             cell.flagged = !cell.flagged;
@@ -223,19 +224,76 @@ public class Game : MonoBehaviour
         // get the cell at the cell position
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
 
+        // NONE Reveal
         if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
         {
             return;
         }
         
-        // reveal cell
+        // EMPTY reveal
+        if (cell.type == Cell.Type.Empty)
+        {
+            RevealAll(cell);
+        }
+
+        // EXPLOSION reveal
+        if (cell.type == Cell.Type.Mine)
+        {
+            Explode(cell);
+        }
+
+        // NORMAL reveal cell
         cell.revealed = true;
         state[cellPosition.x, cellPosition.y] = cell;
         _gameBoard.Draw(state);
 
     }
+    
+    // Explode the cell
+    private void Explode(Cell cell)
+    {
+        
+    }
 
-    // get the clicked cell position
+    // Reveal all nearby empty cell
+    // Stop revealing only if
+    // 1. Hit a mine
+    // 2. Hit revealed cell
+    private void RevealAll(Cell cell)
+    {
+        // exit condition
+        // 1: revealed
+        if (cell.revealed)
+        {
+            return;
+        }
+
+        // 2: meet mine
+        if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid)
+        {
+            return;
+        }
+        
+        cell.revealed = true;
+        state[cell.position.x, cell.position.y] = cell;
+        
+        // keep checking nearby cell on four corner of existing cell if it is empty
+        if (cell.type == Cell.Type.Empty)
+        {
+            // left of current cell
+            RevealAll(GetCell(cell.position.x - 1, cell.position.y));
+            // right of current cell
+            RevealAll(GetCell(cell.position.x - 1, cell.position.y));
+            // top of current cell
+            RevealAll(GetCell(cell.position.x , cell.position.y + 1));
+            // bottom of current cell
+            RevealAll(GetCell(cell.position.x , cell.position.y - 1));
+        }
+        
+        
+    }
+
+    // Get the clicked cell position
     private Cell GetCell(int x, int y)
     {
         // if the clicked position IS in the cell grid
