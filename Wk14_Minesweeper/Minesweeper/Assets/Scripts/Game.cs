@@ -17,6 +17,9 @@ public class Game : MonoBehaviour
     // total number of mines on the board
     [SerializeField] private int mineCount = 32;
     
+    // Game over indicator
+    private bool gameOver;
+    
     private void Awake()
     {
         // to call the draw function from children
@@ -32,6 +35,8 @@ public class Game : MonoBehaviour
     private void NewGame()
     {
         state = new Cell[width, height];
+        // game over status
+        gameOver = false;
         
         // LAYER 0: generate all the cells on the base layer
         GenerateCells();
@@ -249,10 +254,32 @@ public class Game : MonoBehaviour
 
     }
     
-    // Explode the cell
+    // Explode, gameover
     private void Explode(Cell cell)
     {
+        // Debug.Log("Game Over");
+        gameOver = true;
         
+        // reveal the explosion cell
+        cell.revealed = true;
+        cell.exploded = true;
+        state[cell.position.x, cell.position.y] = cell;
+
+        // if triggered explosion reveal all the mines in game
+        for (int x = 0; x < width; x++) 
+        {
+            for (int y = 0; y < height; y++)
+            {
+                // loop through each cell 
+                cell = state[x, y];
+                
+                if (cell.type == Cell.Type.Mine)
+                {
+                    cell.revealed = true;
+                    state[x, y] = cell;
+                }
+            }
+        }
     }
 
     // Reveal all nearby empty cell

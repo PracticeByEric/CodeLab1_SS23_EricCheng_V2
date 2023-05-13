@@ -74,7 +74,13 @@ public class GameBoard : MonoBehaviour
         switch (cell.type)
         {
             case Cell.Type.Empty: return tileEmpty;
-            case Cell.Type.Mine: return tileMine;
+            case Cell.Type.Mine:
+                // if explode the mine
+                if (cell.exploded)
+                {
+                    return tileExploded;
+                }
+                return tileMine;
             // assign number
             case Cell.Type.Number: return GetNumberTile(cell); 
                 default: return null;
