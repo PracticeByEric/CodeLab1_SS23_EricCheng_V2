@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
+
     // size of the actual gameboard
     [SerializeField] int width = 16;
     [SerializeField] int height = 16;
