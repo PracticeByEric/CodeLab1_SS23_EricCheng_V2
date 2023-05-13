@@ -9,6 +9,8 @@ using Random = UnityEngine.Random;
 public class Game : MonoBehaviour
 {
 
+    public GameOverScript gameOverScript;
+    
     // size of the actual gameboard
     [SerializeField] int width = 16;
     [SerializeField] int height = 16;
@@ -184,6 +186,7 @@ public class Game : MonoBehaviour
     // Check for mouse button click
     private void Update()
     {
+        // Game going
         // Only able to move if !gameOver
         if (gameOver == false)
         {
@@ -200,7 +203,12 @@ public class Game : MonoBehaviour
             {
                 // Debug.Log("Reveal Triggered");
                 Reveal();
-            }   
+            }
+        }
+        // Game ends
+        else
+        {
+            GameOver();
         }
     }
 
@@ -381,5 +389,10 @@ public class Game : MonoBehaviour
         // Winning mechanism
         Debug.Log("Win!");
         gameOver = true;
+    }
+
+    private void GameOver()
+    {
+        gameOverScript.Setup();
     }
 }
