@@ -9,7 +9,9 @@ using Random = UnityEngine.Random;
 public class Game : MonoBehaviour
 {
 
-    public GameOverScript gameOverScript;
+    // public GameOverScript gameOverScript;
+
+    public GameManager gameManager;
     
     // size of the actual gameboard
     [SerializeField] int width = 16;
@@ -22,7 +24,10 @@ public class Game : MonoBehaviour
     [SerializeField] private int mineCount = 32;
     
     // Game over indicator
+    
     private bool gameOver;
+    private bool loose;
+    private bool win;
     
     private void Awake()
     {
@@ -41,6 +46,8 @@ public class Game : MonoBehaviour
         state = new Cell[width, height];
         // game over status
         gameOver = false;
+        loose = false;
+        win = false;
         
         // LAYER 0: generate all the cells on the base layer
         GenerateCells();
@@ -188,7 +195,7 @@ public class Game : MonoBehaviour
     {
         // Game going
         // Only able to move if !gameOver
-        if (gameOver == false)
+        if (gameOver == false && loose == false && win == false)
         {
             // RIGHT CLICK: receive right mouse click
             if (Input.GetMouseButtonDown(1))
@@ -205,10 +212,20 @@ public class Game : MonoBehaviour
                 Reveal();
             }
         }
-        // Game ends
-        else
+        // Game ends if dead
+        // else
+        // {
+        //     gameManager.gameOver();
+        // }
+        
+        // loose the game
+        else if (gameOver == true && loose == true && win == false)
         {
-            GameOver();
+            gameManager.gameOver();
+        }
+        else if (gameOver == true && loose == false && win == true)
+        {
+            gameManager.gameWin();
         }
     }
 
@@ -276,6 +293,7 @@ public class Game : MonoBehaviour
     {
         // Debug.Log("Game Over");
         gameOver = true;
+        loose = true;
         
         // reveal the explosion cell
         cell.revealed = true;
@@ -388,11 +406,9 @@ public class Game : MonoBehaviour
         }
         // Winning mechanism
         Debug.Log("Win!");
+        // gameOver but win
         gameOver = true;
+        win = true;
     }
-
-    private void GameOver()
-    {
-        gameOverScript.Setup();
-    }
+    
 }
